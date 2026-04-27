@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAISON — Personal Boutique</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ══════════════════════════════════════════
+     LOGIN PAGE
+══════════════════════════════════════════ -->
+<div class="fullpage" id="loginPage">
+  <div class="page-topbar">
+    <button class="page-close-btn" onclick="closePage('loginPage')">← Back to Shop</button>
+    <a href="#" class="logo">MAI<span>S</span>ON</a>
+    <div style="width:160px"></div>
+  </div>
+  <div class="login-body">
+    <div class="login-visual">
+      <div class="login-big-text">MAI<br>SON</div>
+    </div>
+    <div class="login-form-wrap">
+      <div class="login-form-inner">
+        <p class="login-label">Welcome</p>
+        <h2 class="login-title">Your Account</h2>
+        <p class="login-subtitle">Sign in to access your wishlist, orders and profile.</p>
+        <div class="login-tabs">
+          <button class="login-tab active" onclick="switchLoginTab('signin')">Sign In</button>
+          <button class="login-tab" onclick="switchLoginTab('register')">Register</button>
+        </div>
+
+        <!-- Sign In Panel -->
+        <div class="login-panel active" id="panel-signin">
+          <div id="signin-error" class="login-error"></div>
+          <div class="login-form-group">
+            <label class="login-form-label">Email</label>
+            <input class="login-form-input" type="email" placeholder="you@example.com" id="signin-email">
+          </div>
+          <div class="login-form-group">
+            <label class="login-form-label">Password</label>
+            <input class="login-form-input" type="password" placeholder="••••••••" id="signin-pass">
+          </div>
+          <button class="login-submit" onclick="handleSignIn()">Sign In →</button>
+          <div class="login-divider"><div class="login-divider-line"></div><span class="login-divider-text">or</span><div class="login-divider-line"></div></div>
+          <button class="social-login-btn" onclick="handleSocialLogin('Google')"><span>🔵</span> Continue with Google</button>
+          <button class="social-login-btn" onclick="handleSocialLogin('Apple')"><span>🍎</span> Continue with Apple</button>
+        </div>
+
+        <!-- Register Panel -->
+        <div class="login-panel" id="panel-register">
+          <div id="register-success" class="login-success"></div>
+          <div id="register-error" class="login-error"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="login-form-group">
+              <label class="login-form-label">First Name</label>
+              <input class="login-form-input" type="text" placeholder="Arjun" id="reg-fname">
+            </div>
+            <div class="login-form-group">
+              <label class="login-form-label">Last Name</label>
+              <input class="login-form-input" type="text" placeholder="Sharma" id="reg-lname">
+            </div>
+          </div>
+          <div class="login-form-group">
+            <label class="login-form-label">Email</label>
+            <input class="login-form-input" type="email" placeholder="you@example.com" id="reg-email">
+          </div>
+          <div class="login-form-group">
+            <label class="login-form-label">Phone</label>
+            <input class="login-form-input" type="tel" placeholder="+91 98765 43210" id="reg-phone">
+          </div>
+          <div class="login-form-group">
+            <label class="login-form-label">Password</label>
+            <input class="login-form-input" type="password" placeholder="Min. 6 characters" id="reg-pass">
+          </div>
+          <button class="login-submit" onclick="handleRegister()">Create Account →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     FAVORITES PAGE
+══════════════════════════════════════════ -->
+<div class="fullpage" id="favoritesPage">
+  <div class="page-topbar">
+    <button class="page-close-btn" onclick="closePage('favoritesPage')">← Back to Shop</button>
+    <a href="#" class="logo">MAI<span>S</span>ON</a>
+    <div style="width:160px"></div>
+  </div>
+  <div class="fav-body">
+    <p class="section-label" style="margin-bottom:8px">Your Collection</p>
+    <h2 class="section-title" style="margin-bottom:48px">Saved <em>Favourites</em></h2>
+    <div id="favEmpty" class="fav-empty">
+      <div class="fav-empty-icon">♡</div>
+      <p class="fav-empty-text">Nothing saved yet</p>
+      <p class="fav-empty-sub">Tap the heart icon on any product to save it here.</p>
+    </div>
+    <div class="fav-grid" id="favGrid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ORDER HISTORY PAGE
+══════════════════════════════════════════ -->
+<div class="fullpage" id="ordersPage">
+  <div class="page-topbar">
+    <button class="page-close-btn" onclick="closePage('ordersPage')">← Back to Shop</button>
+    <a href="#" class="logo">MAI<span>S</span>ON</a>
+    <div style="width:160px"></div>
+  </div>
+  <div class="orders-body">
+    <p class="section-label" style="margin-bottom:8px">Your History</p>
+    <h2 class="section-title" style="margin-bottom:16px">My <em>Orders</em></h2>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:48px">Click on any order to expand its details and track its status.</p>
+    <div id="ordersEmpty" class="orders-empty" style="display:none">
+      <div class="orders-empty-icon">📦</div>
+      <p class="orders-empty-text">No orders yet</p>
+      <p class="orders-empty-sub">Once you place an order, it will appear here.</p>
+    </div>
+    <div class="orders-list" id="ordersList"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PRODUCT DETAIL MODAL
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="productModalOverlay" onclick="closeProductModal(event)">
+  <div class="product-modal" id="productModal">
+    <div class="modal-visual" id="modalVisual">
+      <button class="modal-close" onclick="closeProductModalDirect()">✕</button>
+      <span id="modalEmoji">🎧</span>
+      <span class="modal-badge" id="modalBadge" style="display:none"></span>
+    </div>
+    <div class="modal-info">
+      <div class="modal-category" id="modalCategory">Electronics</div>
+      <h2 class="modal-name" id="modalName">Product Name</h2>
+      <p class="modal-desc" id="modalDesc">Description goes here.</p>
+      <div class="modal-specs" id="modalSpecs"></div>
+      <div class="modal-price-row">
+        <span class="modal-price" id="modalPrice">₹0</span>
+        <span class="modal-orig-price" id="modalOrigPrice" style="display:none"></span>
+      </div>
+      <div class="modal-qty-row">
+        <span class="modal-qty-label">Quantity</span>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="updateModalQty(-1)">−</button>
+          <span id="modalQtyVal" class="qty-val">1</span>
+          <button class="qty-btn" onclick="updateModalQty(1)">+</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-add-btn" id="modalAddBtn" onclick="modalAddToCart()">Add to Cart</button>
+        <button class="modal-wish-btn" id="modalWishBtn" onclick="modalToggleWish()" title="Save to Favourites">♡</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <span class="cart-title">Your Selections</span>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <div class="cart-empty-icon">🛍</div>
+      <p>Your cart is empty</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-amount" id="cartTotal">₹0</span>
+    </div>
+    <div style="display:flex; gap:12px;">
+      <button class="clear-cart-btn" onclick="clearCart()">Clear</button>
+      <button class="checkout-btn" style="flex:1" onclick="handleCheckout()">Proceed to Checkout →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <a href="#" class="logo">MAI<span>S</span>ON</a>
+  <nav>
+    <a href="#categories">Collections</a>
+    <a href="#products">Shop</a>
+    <a href="#featured">Featured</a>
+    <a href="#testimonials">Reviews</a>
+  </nav>
+  <div class="header-actions">
+    <!-- Favorites -->
+    <button class="hdr-btn" onclick="openPage('favoritesPage')" title="Favourites">
+      ♡
+      <span class="hdr-badge" id="favCount" style="display:none">0</span>
+    </button>
+    <!-- Profile / Login -->
+    <div class="profile-wrap" id="profileWrap">
+      <button class="hdr-btn" onclick="toggleProfileDropdown()" id="profileBtn" title="Account">👤</button>
+      <div class="profile-dropdown" id="profileDropdown">
+        <!-- Logged out state -->
+        <div id="dropLoggedOut" style="padding:20px;">
+          <p style="font-family:'Cormorant Garamond',serif;font-size:20px;margin-bottom:8px;">Hello, Guest</p>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:16px;">Sign in to view your profile and orders.</p>
+          <button class="login-submit" style="font-size:10px;padding:12px;" onclick="openLoginFromDropdown()">Sign In / Register →</button>
+        </div>
+        <!-- Logged in state -->
+        <div id="dropLoggedIn" style="display:none;">
+          <div class="profile-header-drop">
+            <div class="profile-avatar-big" id="dropAvatar">👤</div>
+            <div>
+              <div class="profile-name-drop" id="dropName">—</div>
+              <div class="profile-email-drop" id="dropEmail">—</div>
+            </div>
+          </div>
+          <div class="profile-drop-links">
+            <button class="profile-drop-link" onclick="openPage('favoritesPage');closeDropdown()"><span class="pdl-icon">♡</span> My Favourites</button>
+            <button class="profile-drop-link" onclick="openOrdersPage();closeDropdown()"><span class="pdl-icon">📦</span> My Orders</button>
+            <button class="profile-drop-link"><span class="pdl-icon">⚙️</span> Account Settings</button>
+            <div class="profile-drop-divider"></div>
+            <button class="profile-drop-link sign-out-btn" onclick="handleSignOut()"><span class="pdl-icon">↩</span> Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Cart -->
+    <button class="cart-btn" onclick="toggleCart()">
+      Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">✦ New Collection 2026</p>
+    <h1 class="hero-title">Curated<br><em>for the</em><br>discerning</h1>
+    <p class="hero-sub">A personal boutique for individuals who appreciate the art of living well. Handpicked objects of beauty and utility.</p>
+    <div class="hero-cta">
+      <a href="#products" class="btn-primary">Explore Shop</a>
+      <a href="#featured" class="btn-ghost">View Featured</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-image-bg"></div>
+    <div class="hero-product-showcase">
+      <div class="showcase-item"><div class="item-emoji">💻</div><div class="item-name">MacBook Stand</div><div class="item-price">₹3,999</div></div>
+      <div class="showcase-item"><div class="item-emoji">🧴</div><div class="item-name">Rose Serum</div><div class="item-price">₹10,299</div></div>
+      <div class="showcase-item"><div class="item-emoji">📿</div><div class="item-name">Lapis Bracelet</div><div class="item-price">₹7,499</div></div>
+    </div>
+  </div>
+  <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <div class="marquee-item">Handpicked Objects <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Artisanal Quality <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Free Shipping Over ₹999 <span class="marquee-dot"></span></div>
+    <div class="marquee-item">100% Authentic <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Electronics & Lifestyle <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Handpicked Objects <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Artisanal Quality <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Free Shipping Over ₹999 <span class="marquee-dot"></span></div>
+    <div class="marquee-item">100% Authentic <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Electronics & Lifestyle <span class="marquee-dot"></span></div>
+  </div>
+</div>
+
+<!-- ─── CATEGORIES ─── -->
+<section class="categories" id="categories">
+  <p class="section-label reveal">Browse Collections</p>
+  <h2 class="section-title reveal">Shop by <em>Category</em></h2>
+  <div class="category-grid">
+    <a class="category-card reveal" href="#products" onclick="filterProducts('Electronics')"><div class="cat-icon">⚡</div><div class="cat-name">Electronics</div><div class="cat-count">6 items</div><span class="cat-arrow">→</span></a>
+    <a class="category-card reveal" href="#products" onclick="filterProducts('Beauty')"><div class="cat-icon">✨</div><div class="cat-name">Beauty</div><div class="cat-count">3 items</div><span class="cat-arrow">→</span></a>
+    <a class="category-card reveal" href="#products" onclick="filterProducts('Home')"><div class="cat-icon">🕯️</div><div class="cat-name">Home & Living</div><div class="cat-count">3 items</div><span class="cat-arrow">→</span></a>
+    <a class="category-card reveal" href="#products" onclick="filterProducts('Jewellery')"><div class="cat-icon">💎</div><div class="cat-name">Jewellery</div><div class="cat-count">2 items</div><span class="cat-arrow">→</span></a>
+    <a class="category-card reveal" href="#products" onclick="filterProducts('Fashion')"><div class="cat-icon">👜</div><div class="cat-name">Fashion</div><div class="cat-count">2 items</div><span class="cat-arrow">→</span></a>
+  </div>
+</section>
+
+<!-- ─── PRODUCTS ─── -->
+<section id="products" style="background:rgba(247,243,237,0.02)">
+  <p class="section-label reveal">Our Selection</p>
+  <h2 class="section-title reveal">Featured <em>Products</em></h2>
+  <div class="shop-controls reveal">
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn active" onclick="filterProducts('All')">All</button>
+      <button class="filter-btn" onclick="filterProducts('Electronics')">Electronics</button>
+      <button class="filter-btn" onclick="filterProducts('Beauty')">Beauty</button>
+      <button class="filter-btn" onclick="filterProducts('Home')">Home & Living</button>
+      <button class="filter-btn" onclick="filterProducts('Jewellery')">Jewellery</button>
+      <button class="filter-btn" onclick="filterProducts('Fashion')">Fashion</button>
+    </div>
+    <div class="shop-actions">
+      <div class="search-wrap">
+        <span class="search-icon">⚲</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search..." oninput="handleSearch()">
+      </div>
+      <select class="sort-select" id="sortSelect" onchange="handleSort()">
+        <option value="default">Sort by</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- ─── FEATURED ─── -->
+<div class="featured" id="featured">
+  <div class="featured-visual"><div class="featured-big-emoji">🎧</div></div>
+  <div class="featured-content">
+    <p class="section-label">⭐ Staff Pick</p>
+    <h2 class="featured-name">Sony WH-1000<br><em>XM5 Headphones</em></h2>
+    <p class="featured-desc">Industry-leading noise cancellation meets Hi-Res Audio. 30-hour battery, multipoint connection and crystal-clear call quality. The gold standard in wireless audio.</p>
+    <div class="featured-price">₹29,990</div>
+    <div style="display:flex;gap:16px;">
+      <button class="btn-primary" onclick="addToCart({id:10,name:'Sony WH-1000XM5',price:29990,emoji:'🎧',category:'Electronics'})">Add to Cart</button>
+      <button class="btn-ghost" onclick="toggleWishlist(10)">Save ♡</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TESTIMONIALS ─── -->
+<section style="background:rgba(201,169,110,0.03)" id="testimonials">
+  <p class="section-label reveal">What Clients Say</p>
+  <h2 class="section-title reveal">Loved by <em>Many</em></h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card reveal"><p class="testimonial-text">The quality is extraordinary. Every item I've ordered has exceeded expectations — this is curation at finest.</p><div class="testimonial-author"><div class="author-avatar">👩</div><div><div class="author-name">Greeshma</div><div class="author-stars">★★★★★</div></div></div></div>
+    <div class="testimonial-card reveal"><p class="testimonial-text">Got the Sony headphones from here — best purchase of the year. Delivery was fast and packaging was beautiful.</p><div class="testimonial-author"><div class="author-avatar">👨</div><div><div class="author-name">Ojeswitha Manju</div><div class="author-stars">★★★★★</div></div></div></div>
+    <div class="testimonial-card reveal"><p class="testimonial-text">Such a thoughtful collection. You can tell each piece was chosen with genuine love and care for the customer.</p><div class="testimonial-author"><div class="author-avatar">👩‍🦱</div><div><div class="author-name">Phani babu</div><div class="author-stars">★★★★★</div></div></div></div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter">
+  <p class="section-label">Stay in the Loop</p>
+  <h2 class="section-title">Join the <em>Inner Circle</em></h2>
+  <p>New arrivals, exclusive previews, and private sales. No spam, ever.</p>
+  <div class="newsletter-form">
+    <input type="email" class="newsletter-input" placeholder="your@email.com" id="emailInput">
+    <button class="newsletter-submit" onclick="handleSubscribe()">Subscribe</button>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo" style="display:block;margin-bottom:20px;">MAI<span>S</span>ON</a>
+      <p class="footer-desc">A personal boutique celebrating the art of beautiful, intentional living. Every object tells a story.</p>
+      <div class="footer-social">
+        <a href="#" class="social-link">𝕏</a><a href="#" class="social-link">in</a><a href="#" class="social-link">◎</a><a href="#" class="social-link">▷</a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Shop</h4><ul><li><a href="#">New Arrivals</a></li><li><a href="#">Electronics</a></li><li><a href="#">Beauty</a></li><li><a href="#">Jewellery</a></li><li><a href="#">Fashion</a></li></ul></div>
+    <div class="footer-col"><h4>Info</h4><ul><li><a href="#">About</a></li><li><a href="#">Sustainability</a></li><li><a href="#">Journal</a></li><li><a href="#">Careers</a></li></ul></div>
+    <div class="footer-col"><h4>Support</h4><ul><li><a href="#">FAQ</a></li><li><a href="#">Shipping</a></li><li><a href="#">Returns</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 MAISON Personal Boutique. All rights reserved.</span>
+    <span class="footer-copy">Crafted with care ✦</span>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     CHECKOUT PAGE
+══════════════════════════════════════════ -->
+<div class="checkout-page" id="checkoutPage">
+  <div class="checkout-topbar">
+    <button class="checkout-back" onclick="closeCheckout()">← Back to Cart</button>
+    <a href="#" class="logo" style="font-size:20px;">MAI<span>S</span>ON</a>
+    <div class="checkout-steps">
+      <div class="step done" id="step-indicator-1"><div class="step-num">1</div><span>Shipping</span></div>
+      <div class="step-divider"></div>
+      <div class="step active" id="step-indicator-2"><div class="step-num">2</div><span>Payment</span></div>
+      <div class="step-divider"></div>
+      <div class="step" id="step-indicator-3"><div class="step-num">3</div><span>Confirm</span></div>
+    </div>
+  </div>
+  <div class="checkout-body">
+    <div class="checkout-main">
+      <!-- Step 1 -->
+      <div class="checkout-step-panel active" id="checkout-step-1">
+        <h2 class="checkout-section-title">Shipping <em>Details</em></h2>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">First Name</label><input class="form-input" type="text" placeholder="Arjun" id="f-firstname"></div>
+          <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" type="text" placeholder="Sharma" id="f-lastname"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" placeholder="arjun@example.com" id="f-email"></div>
+        <div class="form-group"><label class="form-label">Phone Number</label><input class="form-input" type="tel" placeholder="+91 98765 43210" id="f-phone"></div>
+        <div class="form-group"><label class="form-label">Address Line 1</label><input class="form-input" type="text" placeholder="123, MG Road" id="f-addr1"></div>
+        <div class="form-group"><label class="form-label">Address Line 2 <span style="color:var(--text-muted);font-size:8px">(Optional)</span></label><input class="form-input" type="text" placeholder="Flat 4B, Prestige Tower" id="f-addr2"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">City</label><input class="form-input" type="text" placeholder="Bengaluru" id="f-city"></div>
+          <div class="form-group"><label class="form-label">PIN Code</label><input class="form-input" type="text" placeholder="560001" id="f-postal"></div>
+        </div>
+        <div class="form-group"><label class="form-label">State</label>
+          <select class="form-select" id="f-country">
+            <option value="">Select state…</option>
+            <option>Andhra Pradesh</option><option>Delhi</option><option>Goa</option>
+            <option>Gujarat</option><option>Karnataka</option><option>Kerala</option>
+            <option>Maharashtra</option><option>Punjab</option><option>Rajasthan</option>
+            <option>Tamil Nadu</option><option>Telangana</option><option>West Bengal</option><option>Other</option>
+          </select>
+        </div>
+        <button class="continue-btn" onclick="goToStep(2)">Continue to Payment →</button>
+      </div>
+      <!-- Step 2 -->
+      <div class="checkout-step-panel" id="checkout-step-2">
+        <h2 class="checkout-section-title">Payment <em>Method</em></h2>
+        <div class="payment-methods">
+          <div class="payment-method selected" onclick="selectPayment(this,'card')"><div class="payment-radio"><div class="payment-radio-inner"></div></div><div class="payment-icon">💳</div><div class="payment-info"><div class="payment-name">Credit / Debit Card</div><div class="payment-desc">Visa, Mastercard, Rupay, Amex</div></div><span class="payment-badge">Secure</span></div>
+          <div class="payment-method" onclick="selectPayment(this,'upi')"><div class="payment-radio"><div class="payment-radio-inner"></div></div><div class="payment-icon">📱</div><div class="payment-info"><div class="payment-name">UPI</div><div class="payment-desc">GPay, PhonePe, Paytm, BHIM</div></div><span class="payment-badge">Instant</span></div>
+          <div class="payment-method" onclick="selectPayment(this,'netbanking')"><div class="payment-radio"><div class="payment-radio-inner"></div></div><div class="payment-icon">🏦</div><div class="payment-info"><div class="payment-name">Net Banking</div><div class="payment-desc">All major Indian banks supported</div></div></div>
+          <div class="payment-method" onclick="selectPayment(this,'cod')"><div class="payment-radio"><div class="payment-radio-inner"></div></div><div class="payment-icon">💵</div><div class="payment-info"><div class="payment-name">Cash on Delivery</div><div class="payment-desc">Pay when your order arrives</div></div></div>
+          <div class="payment-method" onclick="selectPayment(this,'crypto')"><div class="payment-radio"><div class="payment-radio-inner"></div></div><div class="payment-icon">₿</div><div class="payment-info"><div class="payment-name">Cryptocurrency</div><div class="payment-desc">Bitcoin, Ethereum, USDC and more</div></div></div>
+        </div>
+        <!-- Card Form -->
+        <div class="card-details show" id="card-form">
+          <div class="card-visual">
+            <div class="card-chip">▬</div>
+            <div class="card-number-display" id="display-card-num">•••• •••• •••• ••••</div>
+            <div class="card-meta">
+              <div><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.15em;color:var(--text-muted);margin-bottom:2px">CARD HOLDER</div><div class="card-holder" id="display-card-name">YOUR NAME</div></div>
+              <div><div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.15em;color:var(--text-muted);margin-bottom:2px">EXPIRES</div><div class="card-exp" id="display-card-exp">MM / YY</div></div>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Card Number</label><input class="form-input" type="text" placeholder="1234 5678 9012 3456" maxlength="19" id="card-num" oninput="formatCard(this)"></div>
+          <div class="form-group"><label class="form-label">Cardholder Name</label><input class="form-input" type="text" placeholder="Arjun Sharma" id="card-name" oninput="document.getElementById('display-card-name').textContent=this.value.toUpperCase()||'YOUR NAME'"></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Expiry</label><input class="form-input" type="text" placeholder="MM / YY" maxlength="7" id="card-exp" oninput="formatExp(this)"></div>
+            <div class="form-group"><label class="form-label">CVV</label><input class="form-input" type="password" placeholder="•••" maxlength="4" id="card-cvv"></div>
+          </div>
+        </div>
+        <!-- UPI Form -->
+        <div class="card-details" id="upi-form">
+          <div class="form-group"><label class="form-label">UPI ID</label><input class="form-input" type="text" placeholder="yourname@upi"></div>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:8px">Enter your UPI ID and confirm the payment request on your app.</p>
+        </div>
+        <!-- Net Banking Form -->
+        <div class="card-details" id="netbanking-form">
+          <div class="form-group"><label class="form-label">Select Bank</label>
+            <select class="form-select"><option>SBI</option><option>HDFC</option><option>ICICI</option><option>Axis</option><option>Kotak</option><option>Yes Bank</option><option>Other</option></select>
+          </div>
+        </div>
+        <!-- COD Form -->
+        <div class="card-details" id="cod-form">
+          <p style="font-size:14px;color:var(--cream);margin-bottom:8px">Cash on Delivery selected.</p>
+          <p style="font-size:12px;color:var(--text-muted);line-height:1.7">Please keep exact change ready. A ₹40 COD handling fee will be added to your order.</p>
+        </div>
+        <!-- Crypto Form -->
+        <div class="card-details" id="crypto-form">
+          <div class="crypto-options">
+            <button class="crypto-option selected" onclick="selectCrypto(this)"><div class="crypto-icon">₿</div><div class="crypto-name">Bitcoin</div></button>
+            <button class="crypto-option" onclick="selectCrypto(this)"><div class="crypto-icon">Ξ</div><div class="crypto-name">Ethereum</div></button>
+            <button class="crypto-option" onclick="selectCrypto(this)"><div class="crypto-icon">◎</div><div class="crypto-name">USDC</div></button>
+          </div>
+        </div>
+        <button class="continue-btn" onclick="goToStep(3)">Place Order →</button>
+        <p style="text-align:center;font-size:11px;color:var(--text-muted);margin-top:16px">🔒 256-bit SSL encryption. Your information is always protected.</p>
+      </div>
+      <!-- Step 3 -->
+      <div class="checkout-step-panel" id="checkout-step-3">
+        <div class="confirmation-wrap">
+          <div class="confirm-icon">✨</div>
+          <h2 class="confirm-title">Order <em>Confirmed!</em></h2>
+          <p class="confirm-sub">Thank you for your purchase. Your order has been received and will be carefully packed and delivered to you.</p>
+          <div class="confirm-order-num" id="confirmOrderNum">ORDER #MN-2026-0000</div>
+          <div class="confirm-steps">
+            <div class="confirm-step"><div class="confirm-step-icon">📦</div><div class="confirm-step-label">Packing</div></div>
+            <div class="confirm-step"><div class="confirm-step-icon">🚚</div><div class="confirm-step-label">Shipping</div></div>
+            <div class="confirm-step"><div class="confirm-step-icon">🏠</div><div class="confirm-step-label">Delivery</div></div>
+          </div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:32px">Confirmation sent to <span id="confirmEmail" style="color:var(--gold)">your email</span></p>
+          <button class="continue-btn" style="max-width:320px;margin:0 auto" onclick="finishCheckout()">Continue Shopping →</button>
+        </div>
+      </div>
+    </div>
+    <!-- Aside -->
+    <div class="checkout-aside">
+      <p class="aside-title">Order Summary</p>
+      <div class="summary-items" id="checkoutSummaryItems"></div>
+      <div class="promo-wrap">
+        <input class="promo-input" type="text" placeholder="Promo code" id="promoInput">
+        <button class="promo-btn" onclick="applyPromo()">Apply</button>
+      </div>
+      <div class="summary-lines" style="margin-top:20px">
+        <div class="summary-line"><span class="summary-line-label">Subtotal</span><span class="summary-line-value" id="summarySubtotal">₹0</span></div>
+        <div class="summary-line"><span class="summary-line-label">Shipping</span><span class="summary-line-value" id="summaryShipping">Free</span></div>
+        <div class="summary-line" id="promoLine" style="display:none"><span class="summary-line-label" style="color:var(--sage)">Promo (MAISON10)</span><span class="summary-line-value" style="color:var(--sage)" id="promoAmount">-₹0</span></div>
+        <div class="summary-line"><span class="summary-line-label">GST (18%)</span><span class="summary-line-value" id="summaryTax">₹0</span></div>
+      </div>
+      <div class="summary-total"><span class="summary-total-label">Total</span><span class="summary-total-amount" id="summaryTotal">₹0</span></div>
+      <div class="trust-badges">
+        <div class="trust-badge"><div class="trust-badge-icon">🔒</div><div class="trust-badge-text">SSL Secure</div></div>
+        <div class="trust-badge"><div class="trust-badge-icon">↩️</div><div class="trust-badge-text">Easy Returns</div></div>
+        <div class="trust-badge"><div class="trust-badge-icon">🚀</div><div class="trust-badge-text">Fast Delivery</div></div>
+        <div class="trust-badge"><div class="trust-badge-icon">💎</div><div class="trust-badge-text">Authentic</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
